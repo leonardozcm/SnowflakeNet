@@ -43,6 +43,7 @@ def train_net(cfg):
 
     # Set up folders for logs and checkpoints
     output_dir = os.path.join(cfg.DIR.OUT_PATH, '%s', datetime.now().isoformat())
+    print(output_dir)
     cfg.DIR.CHECKPOINTS = output_dir % 'checkpoints'
     cfg.DIR.LOGS = output_dir % 'logs'
     if not os.path.exists(cfg.DIR.CHECKPOINTS):
