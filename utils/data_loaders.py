@@ -165,14 +165,6 @@ class ShapeNetDataLoader(object):
 
             for s in tqdm(samples, leave=False):
 
-                if subset == 'test':
-
-                    gt_path = cfg.DATASETS.SHAPENET.COMPLETE_POINTS_PATH % (subset, dc['taxonomy_id'], s)
-                    file_list.append({'taxonomy_id': dc['taxonomy_id'],
-                    'model_id': s,
-                    'partial_cloud_path': gt_path.replace('complete', 'partial'),
-                    'gtcloud_path': gt_path})
-                else:
                     file_list.append({
                         'taxonomy_id':
                             dc['taxonomy_id'],
