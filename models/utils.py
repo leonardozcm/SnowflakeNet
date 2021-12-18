@@ -289,7 +289,7 @@ def query_knn(nsample, xyz, new_xyz, include_self=True):
     """Find k-NN of new_xyz in xyz"""
     pad = 0 if include_self else 1
     sqrdists = square_distance(new_xyz, xyz)  # B, S, N
-    idx = torch.argsort(sqrdists, dim=-1, descending=False)[:, :, pad: nsample+pad]
+    idx = torch.argsort(sqrdists, dim=-1, descending=False)[:, :, pad: nsample+pad] # fetch nsamples' nearest points' indice
     return idx.int()
 
 
@@ -314,8 +314,8 @@ def sample_and_group_knn(xyz, points, npoint, k, use_xyz=True, idx=None):
     new_xyz = gather_operation(xyz, furthest_point_sample(xyz_flipped, npoint)) # (B, 3, npoint)
     if idx is None:
         idx = query_knn(k, xyz_flipped, new_xyz.permute(0, 2, 1).contiguous())
-    grouped_xyz = grouping_operation(xyz, idx) # (B, 3, npoint, nsample)
-    grouped_xyz -= new_xyz.unsqueeze(3).repeat(1, 1, 1, k)
+    grouped_xyz = grouping_operation(xyz, idx) # (B, 3, npoint, nsample) npoint groups, nsamples points in each group.
+    grouped_xyz -= new_xyz.unsqueeze(3).repeat(1, 1, 1, k) # offset from kernels (new_xyz is kernels)
 
     if points is not None:
         grouped_points = grouping_operation(points, idx) # (B, f, npoint, nsample)
@@ -420,7 +420,7 @@ class Transformer(nn.Module):
         self.linear_end = nn.Conv1d(dim, in_channel, 1)
 
     def forward(self, x, pos):
-        """feed forward of transformer
+        """feed forward of transformer···
         Args:
             x: Tensor of features, (B, in_channel, n)
             pos: Tensor of positions, (B, 3, n)
@@ -431,14 +431,14 @@ class Transformer(nn.Module):
 
         identity = x
 
-        x = self.linear_start(x)
+        x = self.linear_start(x) # (bs, 128, 512) -> (bs, 64, 512)
         b, dim, n = x.shape
 
         pos_flipped = pos.permute(0, 2, 1).contiguous()
-        idx_knn = query_knn(self.n_knn, pos_flipped, pos_flipped)
-        key = self.conv_key(x)
-        value = self.conv_value(x)
-        query = self.conv_query(x)
+        idx_knn = query_knn(self.n_knn, pos_flipped, pos_flipped)# (bs, n, self.n_knn)
+        key = self.conv_key(x) # (bs, 64, 512) -> (bs, 64, 512)
+        value = self.conv_value(x) # ~
+        query = self.conv_query(x) # ~
 
         key = grouping_operation(key, idx_knn)  # b, dim, n, n_knn
         qk_rel = query.reshape((b, -1, n, 1)) - key
@@ -455,26 +455,5 @@ class Transformer(nn.Module):
         y = self.linear_end(agg)
 
         return y+identity
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

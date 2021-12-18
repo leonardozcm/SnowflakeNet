@@ -18,8 +18,8 @@ __C.DATASETS.SHAPENET                            = edict()
 __C.DATASETS.SHAPENET.CATEGORY_FILE_PATH         = './datasets/ShapeNet.json'
 __C.DATASETS.SHAPENET.N_RENDERINGS               = 8
 __C.DATASETS.SHAPENET.N_POINTS                   = 2048
-__C.DATASETS.SHAPENET.PARTIAL_POINTS_PATH        = '/path/to/datasets/PCN/%s/partial/%s/%s/%02d.pcd'
-__C.DATASETS.SHAPENET.COMPLETE_POINTS_PATH       = '/path/to/datasets/PCN/%s/complete/%s/%s.pcd'
+__C.DATASETS.SHAPENET.PARTIAL_POINTS_PATH        = '/home/chriskafka/dataset/ShapeNetCompletion/%s/partial/%s/%s/%02d.pcd'
+__C.DATASETS.SHAPENET.COMPLETE_POINTS_PATH       = '/home/chriskafka/dataset/ShapeNetCompletion/%s/complete/%s/%s.pcd'
 
 #
 # Dataset
@@ -42,7 +42,7 @@ __C.CONST.N_INPUT_POINTS                         = 2048
 #
 
 __C.DIR                                          = edict()
-__C.DIR.OUT_PATH                                 = 'outpath'
+__C.DIR.OUT_PATH                                 = './checkpoint'
 __C.CONST.DEVICE                                 = '0'
 # __C.CONST.WEIGHTS                                = '/data/xp/experiments/snowflake_test/c3d/checkpoints/2021-08-22T11:25:50.879135/ckpt-best.pth' # 'ckpt-best.pth'  # specify a path to run test and inference
 
