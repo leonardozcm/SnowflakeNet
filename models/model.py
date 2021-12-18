@@ -151,7 +151,7 @@ class Decoder(nn.Module):
             pcd, K_prev = upper(pcd, feat, K_prev)
             arr_pcd.append(pcd.permute(0, 2, 1).contiguous())
 
-        return arr_pcd # [p0(coarse), p1(sample scale), p2(*2), p3(*2)]
+        return arr_pcd # [p0(coarse 256), p1(sample scale 512), p2(*4 2048), p3(*8 16384)]
 
 
 class SnowflakeNet(nn.Module):
